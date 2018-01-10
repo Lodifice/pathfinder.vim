@@ -10,16 +10,20 @@ endif
 
 function! SetProjectPath()
     for pd in g:pathfinder_targets
+        let file = findfile(pd, ".;")
         let dir = finddir(pd, ".;")
-        if empty(dir)
-            continue
+        if !empty(file)
+            echoerr file
+            let &l:path = &path . "," . fnamemodify(file, ":p:h") . "/**"
+            return
+        elseif !empty(dir)
+            let &l:path = &path . "," . fnamemodify(dir, ":p:h:h") . "/**"
+            return
         endif
-        let &l:path = &path . "," . fnamemodify(dir, ":p:h:h") . "/**"
-        return
     endfor
 endfunction
 
 augroup buffer_path
     autocmd!
-    autocmd BufNewFile,BufRead * call SetProjectPath()
+    autocmd VimEnter,BufNewFile,BufRead * call SetProjectPath()
 augroup END
