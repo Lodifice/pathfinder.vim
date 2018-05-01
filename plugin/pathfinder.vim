@@ -14,7 +14,7 @@ function! SetProjectPath()
         if empty(dir)
             continue
         endif
-        let &l:path = &path . fnamemodify(dir, ":p:h:h") . "/**"
+        let &l:path = &path . "," . fnamemodify(dir, ":p:h:h") . "/**"
         return
     endfor
 endfunction
